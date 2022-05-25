@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ellian_Aragao_Dias_App',
       theme: ThemeData(
-        primaryColor: Colors.deepPurple,
+        primaryColor: Colors.pinkAccent,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.white,
+          secondary: Colors.grey,
         ),
       ),
       home: const ViewArquivo(titulo: 'Lista de Disciplinas'),

@@ -25,33 +25,7 @@ class ViewArquivoState extends State<ViewArquivo> {
   @override
   initState() {
     super.initState();
-    fetchData() async {
-      _disciplinas.clear();
-      final _disciplinasArquivo = await DisciplinaArquivo.leArquivo();
-      final disciplinasDoArquivo = List.from(jsonDecode(_disciplinasArquivo))
-          .map((disciplinaJson) => Disciplina.fromJson(disciplinaJson));
-      setState(() {
-        _disciplinas.addAll(disciplinasDoArquivo);
-      });
-    }
-
-    fetchData();
-  }
-
-  _adicionaDisciplina() {
-    setState(() {
-      _disciplinas.add(Disciplina(
-        int.parse(_codigoController.text),
-        _disciplinaController.text,
-        int.parse(_cargaHorariaController.text),
-      ));
-
-      _codigoController.text = "";
-      _disciplinaController.text = "";
-      _cargaHorariaController.text = "";
-
-      DisciplinaArquivo.escreveArquivo(_disciplinas);
-    });
+    _buscaDados();
   }
 
   @override
@@ -96,7 +70,7 @@ class ViewArquivoState extends State<ViewArquivo> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                     child: ElevatedButton(
-                      onPressed: _noClickAdicionaDisciplina,
+                      onPressed: _clickAdicionaDisciplina,
                       child: const Text("Adiciona disciplina"),
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
@@ -157,7 +131,33 @@ class ViewArquivoState extends State<ViewArquivo> {
     );
   }
 
-  void _noClickAdicionaDisciplina() {
+  void _adicionaDisciplina() {
+    setState(() {
+      _disciplinas.add(Disciplina(
+        int.parse(_codigoController.text),
+        _disciplinaController.text,
+        int.parse(_cargaHorariaController.text),
+      ));
+
+      _codigoController.text = "";
+      _disciplinaController.text = "";
+      _cargaHorariaController.text = "";
+
+      DisciplinaArquivo.escreveArquivo(_disciplinas);
+    });
+  }
+
+  void _buscaDados() async {
+    _disciplinas.clear();
+    final _disciplinasArquivo = await DisciplinaArquivo.leArquivo();
+    final disciplinasDoArquivo = List.from(jsonDecode(_disciplinasArquivo))
+        .map((disciplinaJson) => Disciplina.fromJson(disciplinaJson));
+    setState(() {
+      _disciplinas.addAll(disciplinasDoArquivo);
+    });
+  }
+
+  void _clickAdicionaDisciplina() {
     if (_formKey.currentState?.validate() == true) {
       _adicionaDisciplina();
     }
@@ -175,17 +175,17 @@ class ViewArquivoState extends State<ViewArquivo> {
 
   String? _validaNomeDaDisciplina(String? value) {
     if (value == null || value.isEmpty) {
-      return "Nome não pode ser nulo";
+      return "Nome não pode ser vazio";
     }
     return null;
   }
 
-  String? _validaCargaHorariaDaDisciplina(value) {
+  String? _validaCargaHorariaDaDisciplina(String? value) {
     if (value == null || value.isEmpty) {
-      return "Carga Horária não pode ser nulo";
+      return "Carga Horária não pode ser vazia";
     }
     if (int.tryParse(value) == null) {
-      return "Valor inválido";
+      return "Valor inválido, apenas números são aceitos";
     }
     return null;
   }
