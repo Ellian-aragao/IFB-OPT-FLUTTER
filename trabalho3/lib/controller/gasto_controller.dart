@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:trabalho3/model/gasto_mensal.dart';
 import 'package:trabalho3/persistence/gasto_mensal_dao.dart';
 

@@ -17,14 +17,14 @@ class GastoMensal {
   }
 
   get tipoGasto => _tipoGasto;
-  Map<String, Object> getGastoMensal() {
+  Map<String, dynamic> getGastoMensal() {
     return {
-      "_id": id,
-      "_ano": ano,
-      "_mes": mes,
-      "_finalidade": finalidade,
-      "_valor": valor,
-      "_tipoGasto": tipoGasto
+      "_id": _id,
+      "ano": ano,
+      "mes": mes,
+      "finalidade": finalidade,
+      "valor": valor,
+      "tipo_gasto": tipoGasto
     };
   }
 

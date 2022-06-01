@@ -10,13 +10,13 @@ class ListaGastoMensal extends StatefulWidget {
 }
 
 class _ListaGastoMensalState extends State<ListaGastoMensal> {
-  GastoController _gastoController = GastoController();
+  final GastoController _gastoController = GastoController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text("\$ Gasto mensal \$"),
+        title: const Text("\$ Gasto mensal \$"),
         backgroundColor: Colors.amber,
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -24,38 +24,7 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
       body: FutureBuilder<List<GastoMensal>>(
         initialData: const [],
         future: _gastoController.findAll(),
-// ignore: missing_return
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              break;
-            case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text("Carregando..."),
-                  ],
-                ),
-              );
-              break;
-            case ConnectionState.active:
-              break;
-            case ConnectionState.done:
-              final List<GastoMensal> gastos = snapshot.data!;
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final GastoMensal gastoMensal = gastos[index];
-                  return GastoItem(gastoMensal);
-                },
-                itemCount: gastos.length,
-              );
-              break;
-          }
-          return Text("Erro");
-        },
+        builder: listPresenter,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -65,9 +34,55 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
             ),
           );
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.amber,
+        child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Widget listPresenter(context, snapshot) {
+    switch (snapshot.connectionState) {
+      case ConnectionState.none:
+        break;
+      case ConnectionState.waiting:
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const <Widget>[
+              CircularProgressIndicator(),
+              Text("Carregando..."),
+            ],
+          ),
+        );
+      case ConnectionState.active:
+        break;
+      case ConnectionState.done:
+        final List<GastoMensal> gastos = snapshot.data!;
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            final GastoMensal gastoMensal = gastos[index];
+            return Dismissible(
+              key: Key(index.toString()),
+              background: Container(
+                color: Colors.red,
+                child: const Align(
+                  alignment: Alignment(-0.9, 0.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              onDismissed: (direction) =>
+                  _gastoController.excluir(gastoMensal.id),
+              direction: DismissDirection.startToEnd,
+              child: GastoItem(gastoMensal),
+            );
+          },
+          itemCount: gastos.length,
+        );
+    }
+    return const Text("Erro");
   }
 }

@@ -5,10 +5,14 @@ import 'package:trabalho3/component/criar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:trabalho3/controller/gasto_controller.dart';
 import 'package:trabalho3/model/gasto_mensal.dart';
+import 'package:trabalho3/view/gasto_item.dart';
 import 'package:trabalho3/view/lista_gasto_mensal.dart';
 
 class Cadastro extends StatefulWidget {
-  const Cadastro({Key? key}) : super(key: key);
+  GastoMensal? gastoMensal;
+
+  Cadastro({Key? key, this.gastoMensal}) : super(key: key);
+
   @override
   State<Cadastro> createState() => _CadastroState();
 }
@@ -47,7 +51,7 @@ class _CadastroState extends State<Cadastro> {
 
   _inserir(BuildContext context) {
     GastoMensal gastoMensal = GastoMensal(
-        null,
+        widget.gastoMensal?.id,
         int.parse(_anoController.text),
         _mesSelecionado,
         _finalidadeController.text,
@@ -60,6 +64,20 @@ class _CadastroState extends State<Cadastro> {
         });
       });
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.gastoMensal != null) {
+      setState(() {
+        _anoController.text = widget.gastoMensal!.ano.toString();
+        _mesSelecionado = widget.gastoMensal!.mes;
+        _finalidadeController.text = widget.gastoMensal!.finalidade;
+        _valorController.text = widget.gastoMensal!.valor.toString();
+        _tipoGastoSelecionado = widget.gastoMensal!.tipoGasto;
+      });
+    }
   }
 
   @override

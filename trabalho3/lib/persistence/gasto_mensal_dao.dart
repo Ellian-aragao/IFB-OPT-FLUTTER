@@ -6,15 +6,15 @@ import 'package:path/path.dart';
 
 class GastoMensalDao {
 //Definição dos campos da tabela
-  static final _databaseName = "gasto.db";
-  static final _databaseVersion = 1;
-  static final table = "gastomensal";
-  static final _id = "_id";
-  static final _ano = "ano";
-  static final _mes = "mes";
-  static final _finalidade = "finalidade";
-  static final _valor = "valor";
-  static final _tipoGasto = "tipo_gasto";
+  static const _databaseName = "gasto.db";
+  static const _databaseVersion = 1;
+  static const table = "gastomensal";
+  static const _id = "_id";
+  static const _ano = "ano";
+  static const _mes = "mes";
+  static const _finalidade = "finalidade";
+  static const _valor = "valor";
+  static const _tipoGasto = "tipo_gasto";
 // torna esta classe singleton
   GastoMensalDao._privateConstructor();
   static final GastoMensalDao instance = GastoMensalDao._privateConstructor();
@@ -53,7 +53,8 @@ $_tipoGasto TEXT NOT NULL
     try {
       Database db = await instance.database;
       result = await db.insert(table, Map.from(gastoMensal.getGastoMensal()));
-    } on Exception catch (e) {
+    } catch (e) {
+      print("erro ao inserir: $e");
       return 0;
     }
     return result;
