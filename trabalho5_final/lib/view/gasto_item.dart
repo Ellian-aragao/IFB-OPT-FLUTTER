@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:trabalho5_final/model/gasto_mensal.dart';
-import 'package:trabalho5_final/view/cadastro_gasto_mensal.dart';
+import 'package:trabalho5_final/model/item_todo.dart';
+import 'package:trabalho5_final/view/cadastro_tarefa.dart';
 
-class GastoItem extends StatelessWidget {
-  final GastoMensal _gastoMensal;
-  GastoItem(this._gastoMensal);
+class ItemTodoView extends StatelessWidget {
+  final ItemTodo _itemTodo;
+  const ItemTodoView(this._itemTodo, {Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
         color: Colors.amber,
         child: ListTile(
           title: Text(
-            _gastoMensal.finalidade,
-            style: TextStyle(
+            _itemTodo.titulo,
+            style: const TextStyle(
               fontSize: 16.0,
             ),
           ),
           subtitle: Text(
-            _gastoMensal.valor.toStringAsFixed(2),
-            style: TextStyle(
+            _itemTodo.descricao,
+            style: const TextStyle(
               fontSize: 12.0,
             ),
           ),
-          onTap: () => {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Cadastro(gastoMensal: _gastoMensal))),
-          },
+          onTap: () => _onTap(context),
         ));
+  }
+
+  void _onTap(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => Cadastro(itemTodo: _itemTodo)));
   }
 }

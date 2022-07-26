@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 Widget criarTextField(
   String label,
-  TextEditingController controle,
-  TextInputType textInputType,
-) {
+  TextEditingController controller, {
+  TextInputType? textInputType = TextInputType.text,
+  int? maxLines = 1,
+}) {
   return TextField(
-    controller: controle,
+    controller: controller,
     decoration: InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: Colors.amber),
-      border: OutlineInputBorder(),
+      alignLabelWithHint: true,
+      labelStyle: const TextStyle(color: Colors.amber),
+      border: const OutlineInputBorder(),
     ),
-    style: TextStyle(color: Colors.amber, fontSize: 15.0),
+    style: const TextStyle(color: Colors.amber, fontSize: 15.0),
     keyboardType: textInputType,
+    maxLines: maxLines,
   );
 }

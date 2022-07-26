@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:trabalho5_final/controller/gasto_controller.dart';
+import 'package:trabalho5_final/model/item_todo.dart';
+import 'package:trabalho5_final/service/todo_service.dart';
 import 'package:trabalho5_final/model/gasto_mensal.dart';
-import 'package:trabalho5_final/view/cadastro_gasto_mensal.dart';
+import 'package:trabalho5_final/view/cadastro_tarefa.dart';
 import 'package:trabalho5_final/view/gasto_item.dart';
 
 class ListaGastoMensal extends StatefulWidget {
+  const ListaGastoMensal({Key? key}) : super(key: key);
+
   @override
   _ListaGastoMensalState createState() => _ListaGastoMensalState();
 }
 
 class _ListaGastoMensalState extends State<ListaGastoMensal> {
-  final GastoController _gastoController = GastoController();
+  final TodoService _todoService = TodoService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +24,9 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: FutureBuilder<List<GastoMensal>>(
+      body: FutureBuilder<List<ItemTodo>>(
         initialData: const [],
-        future: _gastoController.findAll(),
+        future: _todoService.findAll(),
         builder: listPresenter,
       ),
       floatingActionButton: FloatingActionButton(
@@ -58,10 +61,10 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
       case ConnectionState.active:
         break;
       case ConnectionState.done:
-        final List<GastoMensal> gastos = snapshot.data!;
+        final List<ItemTodo> itensTodo = snapshot.data!;
         return ListView.builder(
           itemBuilder: (context, index) {
-            final GastoMensal gastoMensal = gastos[index];
+            var itemTodo = itensTodo[index];
             return Dismissible(
               key: Key(index.toString()),
               background: Container(
@@ -74,13 +77,12 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
                   ),
                 ),
               ),
-              onDismissed: (direction) =>
-                  _gastoController.excluir(gastoMensal.id),
+              onDismissed: (direction) => _todoService.excluir(itemTodo.id),
               direction: DismissDirection.startToEnd,
-              child: GastoItem(gastoMensal),
+              child: ItemTodoView(itemTodo),
             );
           },
-          itemCount: gastos.length,
+          itemCount: itensTodo.length,
         );
     }
     return const Text("Erro");
