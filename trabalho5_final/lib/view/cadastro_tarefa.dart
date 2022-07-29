@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:trabalho5_final/component/criar_textfield.dart';
 
-import 'package:flutter/material.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/service/todo_service.dart';
 import 'package:trabalho5_final/view/lista_gasto_mensal.dart';
 
 class Cadastro extends StatefulWidget {
-  ItemTodo? itemTodo;
+  final ItemTodo? itemTodo;
 
-  Cadastro({Key? key, this.itemTodo}) : super(key: key);
+  const Cadastro({Key? key, this.itemTodo}) : super(key: key);
 
   @override
   State<Cadastro> createState() => _CadastroState();
@@ -19,7 +18,6 @@ class Cadastro extends StatefulWidget {
 class _CadastroState extends State<Cadastro> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _todoService = TodoService();
 
   _displaySnackBar(BuildContext context, String mensagem) {
     final snackBar = SnackBar(
@@ -30,14 +28,43 @@ class _CadastroState extends State<Cadastro> {
   }
 
   _inserir(BuildContext context) {
+    var todoService = Provider.of<TodoService>(context, listen: false);
+
     setState(() {
-      var itemTodo =
-          ItemTodo(null, _titleController.text, _descriptionController.text);
-      _todoService.salvar(itemTodo);
-      _displaySnackBar(context, "Tarefa inserida com sucesso!");
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const ListaGastoMensal()));
+      var itemTodo = _inserirCreateItemTodo();
+      todoService.salvar(itemTodo).then((text) {
+        _inserirSucesso(context, text);
+      }).onError((err, stackTrace) {
+        print(err);
+        print(stackTrace);
+        _inserirErro(context);
+      });
     });
+  }
+
+  ItemTodo _inserirCreateItemTodo() {
+    if (widget.itemTodo != null) {
+      return ItemTodo(
+        widget.itemTodo!.id,
+        _titleController.text,
+        _descriptionController.text,
+      );
+    }
+
+    return ItemTodo.ofTitleAndDescription(
+      _titleController.text,
+      _descriptionController.text,
+    );
+  }
+
+  _inserirSucesso(BuildContext context, String text) {
+    _displaySnackBar(context, text);
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const ListaGastoMensal()));
+  }
+
+  _inserirErro(BuildContext context) {
+    _displaySnackBar(context, "Tarefa não foi inserida!");
   }
 
   @override

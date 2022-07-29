@@ -1,42 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
+import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
 
-class TodoService {
-  final _lista = [ItemTodo(1, "titulo", "Descrição")];
+class TodoService extends ChangeNotifier {
+  final ItemTodoPersistenceAdapter _itemTodoPersistenceAdapter;
 
-  list() => Future.delayed(const Duration(seconds: 2), () => _lista);
+  TodoService(this._itemTodoPersistenceAdapter);
 
-  Future<List<ItemTodo>> findAll() async {
-    print("findAll");
-    print(_lista);
-    List<ItemTodo> gastos = await list();
-    return gastos;
+  Future<List<ItemTodo>> findAll() {
+    return _itemTodoPersistenceAdapter.buscarTodos();
   }
 
   Future<String> salvar(ItemTodo itemTodo) async {
-    int res = 0;
-    try {
-      itemTodo.id != null;
+    if (itemTodo.hasId()) {
       print("update data base");
-    } catch (e) {
-      print("insert data base");
-      _lista.insert(0, itemTodo);
-      res = 1;
+      await _itemTodoPersistenceAdapter.salvar(itemTodo);
+      notifyListeners();
+      return "Tarefa atualizada com sucesso!";
     }
-    if (res == 0) {
-      return "Erro ao salvar registro";
-    } else {
-      return "Salvo com sucesso.";
-    }
+    print("insert data base");
+    await _itemTodoPersistenceAdapter.salvar(itemTodo);
+    notifyListeners();
+    return "Tarefa inserida com sucesso!";
   }
 
   Future<String> excluir(int id) async {
-    int res = 0;
     print("delete $id from data base");
-    // res = await GastoMensalDao.excluir(id);
-    if (res == 0) {
-      return "Erro ao excluir registro";
-    } else {
-      return "Excluído com sucesso.";
-    }
+    await _itemTodoPersistenceAdapter.excluir(id);
+    notifyListeners();
+    return "Excluído com sucesso.";
   }
 }
