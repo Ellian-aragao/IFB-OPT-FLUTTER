@@ -84,7 +84,7 @@ class _CadastroState extends State<Cadastro> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Adicionando tarefa"),
+        title: _createTitlePage(),
         backgroundColor: Colors.amber,
         centerTitle: true,
         leading: IconButton(
@@ -135,6 +135,14 @@ class _CadastroState extends State<Cadastro> {
         ),
       ),
     );
+  }
+
+  Text _createTitlePage() {
+    if (widget.itemTodo == null) {
+      return const Text("Adicionando tarefa");
+    }
+
+    return const Text("Atualizando tarefa");
   }
 
   void _voltar() {

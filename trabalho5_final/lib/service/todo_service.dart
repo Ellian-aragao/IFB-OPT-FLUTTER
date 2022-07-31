@@ -24,7 +24,7 @@ class TodoService extends ChangeNotifier {
     return "Tarefa inserida com sucesso!";
   }
 
-  Future<String> excluir(int id) async {
+  Future<String> excluir(String id) async {
     print("delete $id from data base");
     await _itemTodoPersistenceAdapter.excluir(id);
     notifyListeners();

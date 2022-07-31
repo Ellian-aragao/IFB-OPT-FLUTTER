@@ -38,7 +38,7 @@ class _ListaGastoMensalState extends State<ListaGastoMensal> {
             case ConnectionState.waiting:
               return loading();
             case ConnectionState.done:
-              var itensTodo = snapshot.data!;
+              var itensTodo = snapshot.data ?? [];
               return ListView.builder(
                 itemBuilder: (context, index) {
                   var itemTodo = itensTodo[index];

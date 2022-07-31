@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trabalho5_final/component/loading.dart';
+import 'package:trabalho5_final/persistence/item_todo_persistence_dao_firebase.dart';
 import 'package:trabalho5_final/persistence/item_todo_persistence_dao_memory.dart';
 import 'package:trabalho5_final/persistence/item_todo_persistence_dao_sqlite.dart';
 import 'package:trabalho5_final/service/todo_service.dart';
@@ -10,13 +12,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<TodoService>.value(
-          value: TodoService(ItemTodoPersistenceDaoInMemory()),
-        ),
-      ],
-      child: const InitialPage(),
+    return FutureBuilder(
+      future: ItemTodoPersistenceDaoFirebase.initialize(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return MaterialApp(home: loading());
+        }
+
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<TodoService>.value(
+              value: TodoService(ItemTodoPersistenceDaoFirebase()),
+            ),
+          ],
+          child: const InitialPage(),
+        );
+      },
     );
   }
 }

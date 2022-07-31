@@ -1,14 +1,15 @@
 import 'package:trabalho5_final/model/model_data_method.dart';
 
 class ItemTodo implements ModelDataMethod {
-  int? _id;
+  String? _id;
   final String _titulo;
   final String _descricao;
   ItemTodo(this._id, this._titulo, this._descricao);
   String get titulo => _titulo;
   String get descricao => _descricao;
-  int get id => _id!;
-  set id(int value) {
+  String get id => _id!;
+
+  set id(String value) {
     _id = value;
   }
 

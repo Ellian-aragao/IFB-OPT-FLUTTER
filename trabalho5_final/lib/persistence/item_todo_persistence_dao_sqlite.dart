@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:trabalho5_final/model/gasto_mensal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -76,14 +75,14 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
       Database db = await instance.database;
       result = await db.update(table, itemTodo.toMap(),
           where: "$_id = ?", whereArgs: [itemTodo.id]);
-    } on Exception catch (e) {
+    } on Exception {
       return 0;
     }
     return result;
   }
 
   @override
-  Future<void> excluir(int id) async {
+  Future<void> excluir(String id) async {
     Database db = await instance.database;
     await db.delete(table, where: "$_id = ?", whereArgs: [id]);
   }

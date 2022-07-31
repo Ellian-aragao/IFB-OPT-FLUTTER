@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
 
 class ItemTodoPersistenceDaoInMemory implements ItemTodoPersistenceAdapter {
   static int id = 1;
-  static final Map<int, ItemTodo> _itemTodoMap = {};
+  static final Map<String, ItemTodo> _itemTodoMap = {};
 
   @override
   Future<List<ItemTodo>> buscarTodos() {
@@ -13,7 +11,7 @@ class ItemTodoPersistenceDaoInMemory implements ItemTodoPersistenceAdapter {
   }
 
   @override
-  Future<void> excluir(int id) {
+  Future<void> excluir(String id) {
     _itemTodoMap.remove(id);
     return Future.value(null);
   }
@@ -21,9 +19,15 @@ class ItemTodoPersistenceDaoInMemory implements ItemTodoPersistenceAdapter {
   @override
   Future<ItemTodo> salvar(ItemTodo itemTodo) {
     if (itemTodo.hasNotId()) {
-      itemTodo = ItemTodo(id++, itemTodo.titulo, itemTodo.descricao);
+      itemTodo.id = setId();
     }
     _itemTodoMap[itemTodo.id] = itemTodo;
     return Future.value(itemTodo);
+  }
+
+  String setId() {
+    var idString = id.toString();
+    id++;
+    return idString;
   }
 }
