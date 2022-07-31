@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:trabalho5_final/infrastructure/logging.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
 
@@ -17,6 +19,8 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
 
   static final ItemTodoPersistenceDaoSqlite instance =
       ItemTodoPersistenceDaoSqlite._privateConstructor();
+
+  final log = LoggerFactory.getLoggerFromClass(ItemTodoPersistenceDaoSqlite);
 
   ItemTodoPersistenceDaoSqlite._privateConstructor();
 
@@ -37,45 +41,54 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
   }
 
   Future _onCreate(Database db, int version) async {
+    log.info('create table $table');
     await db.execute("""
       CREATE TABLE $table (
       $_id INTEGER PRIMARY KEY,
       $_titulo TEXT NOT NULL,
       $_descricao TEXT NOT NULL
     )""");
+    log.info('create table $table ok');
   }
 
-  static Future<int> inserir(ItemTodo itemTodo) async {
+  Future<int> inserir(ItemTodo itemTodo) async {
+    log.info('insert $itemTodo');
     var result = 0;
     try {
-      Database db = await instance.database;
+      var db = await instance.database;
       result = await db.insert(table, Map.from(itemTodo.toMap()));
-    } catch (e) {
-      print("erro ao inserir: $e");
+      log.info('insert $itemTodo ok');
+    } catch (e, stackTrace) {
+      log.error("erro ao inserir", error: e, stackTrace: stackTrace);
       return 0;
     }
     return result;
   }
 
-  static Future<List<ItemTodo>> findAll() async {
+  Future<List<ItemTodo>> findAll() async {
+    log.info('buscando por todos os itens');
     var db = await instance.database;
     var result = await db.query(table);
-    return _toList(result);
+    log.info('buscando por todos os itens ok');
+    return _parseResultFromSql(result);
   }
 
-  static List<ItemTodo> _toList(List<Map<String, dynamic>> result) {
+  static List<ItemTodo> _parseResultFromSql(List<Map<String, dynamic>> result) {
     return result
         .map((row) => ItemTodo(row[_id], row[_titulo], row[_descricao]))
         .toList();
   }
 
-  static Future<int> alterar(ItemTodo itemTodo) async {
+  Future<int> alterar(ItemTodo itemTodo) async {
+    log.info('alterando $itemTodo');
     var result = 0;
     try {
       Database db = await instance.database;
       result = await db.update(table, itemTodo.toMap(),
           where: "$_id = ?", whereArgs: [itemTodo.id]);
-    } on Exception {
+      log.info('alterando $itemTodo ok');
+    } catch (e, stackTrace) {
+      log.error("erro ao alterar", error: e, stackTrace: stackTrace);
       return 0;
     }
     return result;
@@ -89,7 +102,7 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
 
   @override
   Future<List<ItemTodo>> buscarTodos() {
-    return ItemTodoPersistenceDaoSqlite.findAll();
+    return findAll();
   }
 
   @override

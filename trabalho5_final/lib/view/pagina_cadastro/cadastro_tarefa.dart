@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trabalho5_final/component/criar_textfield.dart';
+import 'package:trabalho5_final/infrastructure/logging.dart';
 
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/service/todo_service.dart';
-import 'package:trabalho5_final/view/lista_gasto_mensal.dart';
+import 'package:trabalho5_final/view/pagina_inicial/lista_gasto_mensal.dart';
 
 class Cadastro extends StatefulWidget {
   final ItemTodo? itemTodo;
@@ -18,6 +21,7 @@ class Cadastro extends StatefulWidget {
 class _CadastroState extends State<Cadastro> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final log = LoggerFactory.getLoggerFromClass(Cadastro);
 
   _displaySnackBar(BuildContext context, String mensagem) {
     final snackBar = SnackBar(
@@ -35,9 +39,7 @@ class _CadastroState extends State<Cadastro> {
       todoService.salvar(itemTodo).then((text) {
         _inserirSucesso(context, text);
       }).onError((err, stackTrace) {
-        print(err);
-        print(stackTrace);
-        _inserirErro(context);
+        _inserirErro(context, err, stackTrace);
       });
     });
   }
@@ -58,12 +60,14 @@ class _CadastroState extends State<Cadastro> {
   }
 
   _inserirSucesso(BuildContext context, String text) {
+    log.info('item inserido com sucesso: $text');
     _displaySnackBar(context, text);
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const ListaGastoMensal()));
   }
 
-  _inserirErro(BuildContext context) {
+  _inserirErro(BuildContext context, Object? err, StackTrace stackTrace) {
+    log.error('erro na criação do item', error: err, stackTrace: stackTrace);
     _displaySnackBar(context, "Tarefa não foi inserida!");
   }
 

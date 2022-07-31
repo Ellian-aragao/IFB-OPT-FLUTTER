@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
-import 'package:trabalho5_final/view/cadastro_tarefa.dart';
+import 'package:trabalho5_final/view/pagina_cadastro/cadastro_tarefa.dart';
 
 class ItemTodoView extends StatelessWidget {
   final ItemTodo _itemTodo;
