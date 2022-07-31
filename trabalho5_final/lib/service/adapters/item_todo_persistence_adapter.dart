@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:trabalho5_final/model/item_todo.dart';
 
 abstract class ItemTodoPersistenceAdapter {

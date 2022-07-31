@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:trabalho5_final/infrastructure/logging.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
-import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
+import 'package:trabalho5_final/service/adapters/item_todo_persistence_adapter.dart';
 
 class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
   static const _databaseName = "item_todo.db";

@@ -1,5 +1,5 @@
 import 'package:trabalho5_final/model/item_todo.dart';
-import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
+import 'package:trabalho5_final/service/adapters/item_todo_persistence_adapter.dart';
 
 class ItemTodoPersistenceDaoInMemory implements ItemTodoPersistenceAdapter {
   static int id = 1;

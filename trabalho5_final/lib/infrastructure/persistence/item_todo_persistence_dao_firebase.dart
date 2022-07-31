@@ -1,11 +1,11 @@
 import 'dart:collection';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:trabalho5_final/firebase_options.dart';
+import 'package:trabalho5_final/infrastructure/firebase/firebase_options.dart';
 import 'package:trabalho5_final/infrastructure/logging.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
-import 'package:trabalho5_final/persistence/item_todo_persistence_adapter.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:trabalho5_final/service/adapters/item_todo_persistence_adapter.dart';
 
 class ItemTodoPersistenceDaoFirebase implements ItemTodoPersistenceAdapter {
   final log = LoggerFactory.getLoggerFromClass(ItemTodoPersistenceDaoFirebase);

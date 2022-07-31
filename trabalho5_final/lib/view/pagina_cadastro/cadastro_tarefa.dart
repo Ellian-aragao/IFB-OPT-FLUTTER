@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trabalho5_final/component/criar_textfield.dart';
 import 'package:trabalho5_final/infrastructure/logging.dart';
 
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/service/todo_service.dart';
+import 'package:trabalho5_final/view/component/criar_textfield.dart';
 import 'package:trabalho5_final/view/pagina_inicial/lista_gasto_mensal.dart';
 
 class Cadastro extends StatefulWidget {

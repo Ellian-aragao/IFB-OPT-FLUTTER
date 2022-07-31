@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trabalho5_final/component/loading.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/service/todo_service.dart';
+import 'package:trabalho5_final/view/component/loading.dart';
 import 'package:trabalho5_final/view/pagina_cadastro/cadastro_tarefa.dart';
 import 'package:trabalho5_final/view/pagina_inicial/gasto_item.dart';
 
