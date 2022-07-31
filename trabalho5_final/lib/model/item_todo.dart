@@ -1,6 +1,4 @@
-import 'package:trabalho5_final/model/model_data_method.dart';
-
-class ItemTodo implements ModelDataMethod {
+class ItemTodo {
   String? _id;
   final String _titulo;
   final String _descricao;
@@ -22,10 +20,5 @@ class ItemTodo implements ModelDataMethod {
   @override
   String toString() {
     return 'ItemTodo{_id: $_id, _titulo: $_titulo, _descricao: $_descricao}';
-  }
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {"_id": _id, "titulo": _titulo, "descricao": _descricao};
   }
 }

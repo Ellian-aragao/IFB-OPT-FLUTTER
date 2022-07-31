@@ -1,15 +1,15 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:trabalho5_final/infrastructure/logging.dart';
+import 'package:trabalho5_final/infrastructure/persistence/item_todo_map_persistence.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:trabalho5_final/service/adapters/item_todo_persistence_adapter.dart';
 
 class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
   static const _databaseName = "item_todo.db";
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 2;
   static const table = "item_todo";
   static const _id = "_id";
   static const _titulo = "titulo";
@@ -56,7 +56,7 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
     var result = 0;
     try {
       var db = await instance.database;
-      result = await db.insert(table, Map.from(itemTodo.toMap()));
+      result = await db.insert(table, Map.from(itemTodotoMap(itemTodo)));
       log.info('insert $itemTodo ok');
     } catch (e, stackTrace) {
       log.error("erro ao inserir", error: e, stackTrace: stackTrace);
@@ -73,9 +73,10 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
     return _parseResultFromSql(result);
   }
 
-  static List<ItemTodo> _parseResultFromSql(List<Map<String, dynamic>> result) {
+  List<ItemTodo> _parseResultFromSql(List<Map<String, dynamic>> result) {
     return result
-        .map((row) => ItemTodo(row[_id], row[_titulo], row[_descricao]))
+        .map((row) =>
+            ItemTodo(row[_id].toString(), row[_titulo], row[_descricao]))
         .toList();
   }
 
@@ -84,7 +85,7 @@ class ItemTodoPersistenceDaoSqlite extends ItemTodoPersistenceAdapter {
     var result = 0;
     try {
       Database db = await instance.database;
-      result = await db.update(table, itemTodo.toMap(),
+      result = await db.update(table, itemTodotoMap(itemTodo),
           where: "$_id = ?", whereArgs: [itemTodo.id]);
       log.info('alterando $itemTodo ok');
     } catch (e, stackTrace) {

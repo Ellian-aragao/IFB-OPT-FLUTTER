@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:trabalho5_final/infrastructure/firebase/firebase_options.dart';
 import 'package:trabalho5_final/infrastructure/logging.dart';
+import 'package:trabalho5_final/infrastructure/persistence/item_todo_map_persistence.dart';
 import 'package:trabalho5_final/model/item_todo.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:trabalho5_final/service/adapters/item_todo_persistence_adapter.dart';
@@ -39,14 +40,15 @@ class ItemTodoPersistenceDaoFirebase implements ItemTodoPersistenceAdapter {
   @override
   Future<ItemTodo> salvar(ItemTodo itemTodo) async {
     log.info('realizando salvar de item: $itemTodo');
+    var dataToSave = itemTodotoMap(itemTodo);
     if (itemTodo.hasNotId()) {
       log.info('item ainda não possui id, realizando inserção');
-      await db.ref(rootKey).push().set(itemTodo.toMap());
+      await db.ref(rootKey).push().set(dataToSave);
       log.info('inserção realizada');
       return itemTodo;
     }
     log.info('item já possui id, realizando atualização');
-    await db.ref(rootKey).child(itemTodo.id).set(itemTodo.toMap());
+    await db.ref(rootKey).child(itemTodo.id).set(dataToSave);
     log.info('atualização realizada');
     return itemTodo;
   }

@@ -9,9 +9,9 @@ class TodoService extends ChangeNotifier {
 
   TodoService(this._itemTodoPersistenceAdapter);
 
-  Future<List<ItemTodo>> findAll() {
+  Future<List<ItemTodo>> findAll() async {
     log.info('buscando todos os itens todo');
-    var todosOsItens = _itemTodoPersistenceAdapter.buscarTodos();
+    var todosOsItens = await _itemTodoPersistenceAdapter.buscarTodos();
     log.info('buscando todos os itens todo ok');
     return todosOsItens;
   }
